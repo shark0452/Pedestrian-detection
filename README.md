@@ -87,3 +87,50 @@ https://community.aidlux.com/postDetail/827
 
 比如打开read_image_Aidlux.py文件，运行后，在手机端的Aidlux上可以看到读取的显示图片。
 打开video_capture_Aidlux.py，在读取视频和显示图像的地方，采用cvs的方式，读取运行后，就可以在手机上看到显示的视频效果。
+
+人体检测模型的训练和部署测试：
+
+    1 Crowdhuman数据集下载及说明
+    
+        因为需要人体检测的模型，先训练一个检测模型，并转换成Aidlux可以部署的方式，进行推理测试。人体检测的数据集有很多，这里采用旷视开源的Crowdhuman的数据集。官网是：http://www.crowdhuman.org/ ，Crowdhuman数据集，总共包含三个方面：15000张的训练数据集，4370张的验证数据集，5000张的测试数据集。其中训练集和验证集都是有标注信息的，测试集没有标注信息。按照官网的标注信息下载之后，得到的文件是这样的。![1667996749609](https://user-images.githubusercontent.com/73569616/200830007-3ef43d6a-57a4-4bb9-b2ec-8f19f411b99d.png)，
+    2 人体检测数据集标注文件转换
+    
+    下载LabelImg,新建一个文件夹Crowdhuman_data，并将网盘下载的Crowdhuman_val.zip和annotation_val.odgt，全都拷贝到Crowdhuman_data中。将其中的CrowdHuman_val.zip解压缩，可以得到一个Images文件夹,CrowdHuman_val.zip和annotation_val.odgt，也可以根据自己需要，后期选择是否训练集也添加进去。将Images文件夹拷贝到Crowdhuman_data路径下，并修改成JPEGImages，此外新建一个Annotations.将annotation_val.odgt中的标注信息提取出来，变成和4370张图片对应的XML格式。
+    
+    标注文件odgt格式转换成xml格式,在lesson3_codes/data_prepare_code文件夹中，编写了数据清洗的脚本data_code.py。使用VScode编程软件打开data_code.py的文件夹，首先修改其中的roadlabels、roadimages、fpath三个路径。![image](https://user-images.githubusercontent.com/73569616/200875003-cbe02a4c-0b66-4d66-a868-10afe6f1a5cc.png)
+需要注意的是Crowdhuman中，有三种标注内容，vbox、fbox、hbox，分别对应：可看到的人体，完整人体，人脸。主要使用完整人体进行训练，因此主要用到fbox的标签。所以再修改下面的两个地方，fbox即表示提取annotation_val.odgt中完整人体的检测框信息，而person表示转换成xml后人体的标签名称信息。![image](https://user-images.githubusercontent.com/73569616/200877896-d78795be-a673-4f37-8c7a-1e5194e7bf87.png)Annotations中可以得到VOC格式的xml文件。主要采用Yolov5的算法，因此我们还要将上面VOC格式转换成Yolov5可以训练的格式。数据清理&切分的脚本，即lesson3_code/data_prepare_code/train_data_split.py。
+
+        (1).新建train_data文件夹,并在train_data里面新建一个images_label_split/crowdhuman_val文件夹，且将前面转换好对应的JPEGImages和Annotations，拷贝到crowdhuman_val文件夹里面。
+,并在train_data里面新建一个images_label_split/crowdhuman_val文件夹，且将转换好对应的JPEGImages和Annotations，拷贝到crowdhuman_val文件夹里面。
+
+        (2) 数据集清洗:
+        比如有图片，但是没有标注xml。再或者有的目标，标注的太小，比如10*10像素，针对一些标注的问题，可以进行梳理。清洗的代码，即train_data_split.py中。运行train_data_split.py代码，会进行清洗梳理，并在最后会用代码显示标注信息结果，查看是否有标错的图片，确认一下。
+        
+        (3) 图片和标签文件没有问题后，我们还需要划分成训练集和验证集。这里我们按照8:2的方式来切分，即80%是训练集，20%是验证集。当然我们需要注意，因为只想运行阶段二的代码，所以将阶段一的所有代码，都注释掉。一个一个 去掉注释 一个一个运行 阶段三暂不运行 
+        在train_data文件夹中，我们可以看到多了train和test两个文件夹，里面是对应的image和xml文件。
+
+    3 云服务器训练人体检测模型：
+    
+    （1）采用的算力平台主要是AutoDL AI算力云，官网链接是：https://www.autodl.com/。点击右上角的“注册”选项先进行注册。再进入后台的主页面，点击左上角的“算力市场”。完成后初始化一下 我的网盘。 训练&验证集图片上传： 我们再将前面的一些文件，传输到“我的网盘”里面。主要上传三个文件：将train_data文件夹中的images_label_split文件夹删除，只留下刚刚划分的train和test文件夹。为了上传方便，将train_data文件夹，压缩成一个train_data.zip。![1668010914564](https://user-images.githubusercontent.com/73569616/200884255-70aec32c-d86b-45d8-b2f8-6dae4820f2b4.png)
+
+    将data_prepare_code文件夹，进行压缩，变成data_prepare_code.zip文件夹。
+    
+    （2）数据集整理代码： 将data_prepare_code文件夹，进行压缩，变成data_prepare_code.zip文件夹。
+    
+    （3）Yolov5训练代码 ： 将Yolov5_code训练代码，进行压缩，变成yolov5_code.zip。
+    
+    （4）后台上传文件 ：
+    点击AutoDL后台的我的网盘，将刚刚的三个zip文件进行上传 点击“立即创建”后，就可以看到创建的实例了。
+    ![image](https://user-images.githubusercontent.com/73569616/200884882-00c0cf54-0a76-4c94-b33e-31cb67339717.png)
+点击右面的“JupyterLab”，可以进入控制台页面。
+
+可以点击下面的“终端”，打开一个终端页面，就可以进行操作了。 并且在上面，我们看到autodl-nas即我们刚刚使用的网盘。
+![image](https://user-images.githubusercontent.com/73569616/200885106-ae855b0a-0e9b-4b54-961d-dc05a53acdd8.png)
+
+        操作方法与linux一致，标注文件xml格式转换txt格式 
+    
+    4 PC端Pytorch推理测试
+    
+    
+    5 Aidlux端模型推理测试
+

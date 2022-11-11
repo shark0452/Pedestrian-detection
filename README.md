@@ -130,7 +130,61 @@ https://community.aidlux.com/postDetail/827
         操作方法与linux一致，标注文件xml格式转换txt格式 
     
     4 PC端Pytorch推理测试
-    
-    
+        Pytorch的官网：https://pytorch.org/。显示窗口会跳出pip3 install torch torchvision torchaudio，当然在下载的时候为了网络加速，还添加了清华源。组成下载代码：pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple  Pytorch，代码中还有一系列的依赖库。
+        Pandas下载：pip3 install pandas -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        yaml下载：pip3 install pyyaml -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        tqdm下载：pip3 install tqdm -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        matplotlib下载：pip3 install matplotlib -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        seaborn下载：pip3 install seaborn -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        scipy下载：pip3 install scipy -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+        ipython下载：pip3 install ipython -i https://pypi.tuna.tsinghua.edu.cn/simple
+        
+        yolov5的模型，对于images里面的图片进行推理，测试一下效果。
+
+打开detect_image.py文件，这里主要修改代码中的模型、图片路径、yaml文件。![1668182432248](https://user-images.githubusercontent.com/73569616/201380736-77d31e00-947b-4745-abbd-cce6d7baeb22.png)使用Run->"Run Without Debuging"，运行后可以得到一张张推理的图片效果。
+
+        视频处理的代码，重新进行了梳理，放在detect_video.py中。主要修改模型路径、视频路径以及yaml的路径。![1668182481303](https://user-images.githubusercontent.com/73569616/201380880-4b7a609f-0d91-424f-bd9f-5baaf54f88a8.png)运行后，可以得到视频的推理结果。
+
     5 Aidlux端模型推理测试
+        在PC端测试完之后，我们主要是在边缘端Aidlux上进行使用，在前面我们也知道，Aidlux主要针对推理部分，在底层进行了加速优化。因此想要将pt模型移植到Aidlux上使用，还要进行转换模型，修改推理代码的操作。pt模型转换成tflite模型 ，模型转换的文件是export.py文件，在Aidlux中主要运行的是tflite的方式，因此主要修改其中的三个地方。![1668182550351](https://user-images.githubusercontent.com/73569616/201381091-22ec41d9-bfc5-41b8-906c-a3cc8420fd1a.png)  没有 tensorflow ： 输入：pip3 install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple，下载tensorflow库。安装好再运行export.py文件，在models文件夹下面，可以看到生成的yolov5n-fp16.tflite文件。
+        
+        针对Aidlux中推理测试的代码，放到yolov5_code/aidlux文件夹的yolov5.py中了，也可以将训练好的tflite放到aidlux文件夹中。其中包含了很多Aidlux专属的函数接口，大家可以在https://docs.aidlux.com/#/intro/ai/ai-aidlite，查看下相关的函数说明。
+        
+        当然其中的代码和原本PC端的代码有一些不同，主要分为三个部分：
+                
+        （1）加载相关的函数库
+        
+        ![1668182655415(1)](https://user-images.githubusercontent.com/73569616/201381452-f2fd5696-46ca-4381-a610-323b9a8cba93.png)
+        
+        （2）模型初始化及加载
+        
+        其中主要用到两个函数接口，一个是aidlite_gpu.aidlite()和aidlite.ANNMode()。
+        
+        ![1668182694025](https://user-images.githubusercontent.com/73569616/201381621-12fee1c9-d172-4607-ad39-5262f01dc9a1.png)
+
+        ![1668182859125](https://user-images.githubusercontent.com/73569616/201385275-ab655686-6397-4602-8950-803c20249ce0.png)
+
+        ![1668182865496](https://user-images.githubusercontent.com/73569616/201385290-6f5ff1ee-da8e-49f8-97db-81f80c3a275d.png)
+
+    此外还有两行in_shape，out_shape，这里可以通过netron查看一下相关的模型参数。我们使用https://netron.app/，打开刚刚的yolov5n_best-fp16.tflite文件。点击最下方的输出单元，可以看到输出的信息。
+        （3）视频读取&模型推理代码
+        
+        ![image](https://user-images.githubusercontent.com/73569616/201387186-0b80e703-f956-4688-9671-fb2189145586.png)
+
+        
+        5.3 代码复制到Aidlux中
+        
+            lessons3_codes都进行上传到网页版的Aidlux中![1668184631711](https://user-images.githubusercontent.com/73569616/201387316-7b56763f-e33d-422c-892a-89c4ad44af2f.png)
+
+        5.4 远程连接Aidlux软件
+            使用SSH，连接到Aidlux的方式。大家也可以远程连接到lesson3_codes，当看到红色部分的SSH:AIDLUX，即说明远程连接成功。
+            ![1668184679011](https://user-images.githubusercontent.com/73569616/201387443-db1ef727-35ae-49f1-a62a-3da5256348e5.png)
+            打开aidlux文件夹中的yolov5.py进行视频推理测试，在手机版本的Aidlux和PC端网页的Aidlux中，都可以看到推理的显示结果。PS：需要注意的是，在运行的时候，需要把手机版本里面的aidlux页面叉掉，免得会有冲突，运行的线程会直接被killed掉。
+            
 

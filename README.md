@@ -166,10 +166,12 @@ https://community.aidlux.com/postDetail/827
 
         使用Run->"Run Without Debuging"，运行后可以得到一张张推理的图片效果。
 
-        视频处理的代码，重新进行了梳理，放在detect_video.py中。主要修改模型路径、视频路径以及yaml的路径。![1668182481303](https://user-images.githubusercontent.com/73569616/201380880-4b7a609f-0d91-424f-bd9f-5baaf54f88a8.png)运行后，可以得到视频的推理结果。
+        视频处理的代码，重新进行了梳理，放在detect_video.py中。主要修改模型路径、视频路径以及yaml的路径。
+![1668182481303](https://user-images.githubusercontent.com/73569616/201380880-4b7a609f-0d91-424f-bd9f-5baaf54f88a8.png)运行后，可以得到视频的推理结果。
 
     5 Aidlux端模型推理测试
-        在PC端测试完之后，我们主要是在边缘端Aidlux上进行使用，在前面我们也知道，Aidlux主要针对推理部分，在底层进行了加速优化。因此想要将pt模型移植到Aidlux上使用，还要进行转换模型，修改推理代码的操作。pt模型转换成tflite模型 ，模型转换的文件是export.py文件，在Aidlux中主要运行的是tflite的方式，因此主要修改其中的三个地方。![1668182550351](https://user-images.githubusercontent.com/73569616/201381091-22ec41d9-bfc5-41b8-906c-a3cc8420fd1a.png)  没有 tensorflow ： 输入：pip3 install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple，下载tensorflow库。安装好再运行export.py文件，在models文件夹下面，可以看到生成的yolov5n-fp16.tflite文件。
+        在PC端测试完之后，我们主要是在边缘端Aidlux上进行使用，在前面我们也知道，Aidlux主要针对推理部分，在底层进行了加速优化。因此想要将pt模型移植到Aidlux上使用，还要进行转换模型，修改推理代码的操作。pt模型转换成tflite模型 ，模型转换的文件是export.py文件，在Aidlux中主要运行的是tflite的方式，因此主要修改其中的三个地方。
+![1668182550351](https://user-images.githubusercontent.com/73569616/201381091-22ec41d9-bfc5-41b8-906c-a3cc8420fd1a.png)  没有 tensorflow ： 输入：pip3 install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple，下载tensorflow库。安装好再运行export.py文件，在models文件夹下面，可以看到生成的yolov5n-fp16.tflite文件。
         
         针对Aidlux中推理测试的代码，放到yolov5_code/aidlux文件夹的yolov5.py中了，也可以将训练好的tflite放到aidlux文件夹中。其中包含了很多Aidlux专属的函数接口，大家可以在https://docs.aidlux.com/#/intro/ai/ai-aidlite，查看下相关的函数说明。
         

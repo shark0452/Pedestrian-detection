@@ -1,7 +1,7 @@
 # Pedestrian-detection
 **本项目 主要是做 越界识别算（中等型算法应用**）
 
-      街道-人体扫描_             -------------------------------------------------------------------
+      街道-人体扫描_         -------------------------------------------------------------
  
 `AidLUx简介` : AIdlux主打的是基于ARM架构的跨生态（Android/鸿蒙+Linux）一站式AIOT应用开发平台。
 
@@ -93,7 +93,7 @@ https://community.aidlux.com/postDetail/827
 比如打开read_image_Aidlux.py文件，运行后，在手机端的Aidlux上可以看到读取的显示图片。
 打开video_capture_Aidlux.py，在读取视频和显示图像的地方，采用cvs的方式，读取运行后，就可以在手机上看到显示的视频效果。
 
-  三 人体检测模型的训练和部署测试：              -------------------------------------------------------------------------------------
+  三 人体检测模型的训练和部署测试：     -------------------------------------------------------------------------------
 
     1 Crowdhuman数据集下载及说明
     
@@ -116,7 +116,7 @@ https://community.aidlux.com/postDetail/827
         (3) 图片和标签文件没有问题后，我们还需要划分成训练集和验证集。这里我们按照8:2的方式来切分，即80%是训练集，20%是验证集。当然我们需要注意，因为只想运行阶段二的代码，所以将阶段一的所有代码，都注释掉。一个一个 去掉注释 一个一个运行 阶段三暂不运行 
         在train_data文件夹中，我们可以看到多了train和test两个文件夹，里面是对应的image和xml文件。
 
-    3 云服务器训练人体检测模型：
+ 3 云服务器训练人体检测模型：
     
     （1）采用的算力平台主要是AutoDL AI算力云，官网链接是：https://www.autodl.com/。点击右上角的“注册”选项先进行注册。再进入后台的主页面，点击左上角的“算力市场”。完成后初始化一下 我的网盘。 训练&验证集图片上传：
     我们再将前面的一些文件，传输到“我的网盘”里面。
@@ -139,10 +139,11 @@ https://community.aidlux.com/postDetail/827
 
         操作方法与linux一致，标注文件xml格式转换txt格式 
     
-    4 PC端Pytorch推理测试
+  4 PC端Pytorch推理测试
+
         Pytorch的官网：https://pytorch.org/。显示窗口会跳出pip3 install torch torchvision torchaudio，当然在下载的时候为了网络加速，还添加了清华源。
        
-         组成下载代码：pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple  Pytorch，代码中还有一系列的依赖库。
+        组成下载代码：pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple  Pytorch，代码中还有一系列的依赖库。
        
          Pandas下载：pip3 install pandas -i https://pypi.tuna.tsinghua.edu.cn/simple
 
@@ -170,12 +171,12 @@ https://community.aidlux.com/postDetail/827
 ![1668182481303](https://user-images.githubusercontent.com/73569616/201380880-4b7a609f-0d91-424f-bd9f-5baaf54f88a8.png)运行后，可以得到视频的推理结果。
 
     5 Aidlux端模型推理测试
-        在PC端测试完之后，我们主要是在边缘端Aidlux上进行使用，在前面我们也知道，Aidlux主要针对推理部分，在底层进行了加速优化。因此想要将pt模型移植到Aidlux上使用，还要进行转换模型，修改推理代码的操作。pt模型转换成tflite模型 ，模型转换的文件是export.py文件，在Aidlux中主要运行的是tflite的方式，因此主要修改其中的三个地方。
+  在PC端测试完之后，我们主要是在边缘端Aidlux上进行使用，在前面我们也知道，Aidlux主要针对推理部分，在底层进行了加速优化。因此想要将pt模型移植到Aidlux上使用，还要进行转换模型，修改推理代码的操作。pt模型转换成tflite模型 ，模型转换的文件是export.py文件，在Aidlux中主要运行的是tflite的方式，因此主要修改其中的三个地方。
 ![1668182550351](https://user-images.githubusercontent.com/73569616/201381091-22ec41d9-bfc5-41b8-906c-a3cc8420fd1a.png)  没有 tensorflow ： 输入：pip3 install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple，下载tensorflow库。安装好再运行export.py文件，在models文件夹下面，可以看到生成的yolov5n-fp16.tflite文件。
         
-        针对Aidlux中推理测试的代码，放到yolov5_code/aidlux文件夹的yolov5.py中了，也可以将训练好的tflite放到aidlux文件夹中。其中包含了很多Aidlux专属的函数接口，大家可以在https://docs.aidlux.com/#/intro/ai/ai-aidlite，查看下相关的函数说明。
+   针对Aidlux中推理测试的代码，放到yolov5_code/aidlux文件夹的yolov5.py中了，也可以将训练好的tflite放到aidlux文件夹中。其中包含了很多Aidlux专属的函数接口，大家可以在https://docs.aidlux.com/#/intro/ai/ai-aidlite，查看下相关的函数说明。
         
-        当然其中的代码和原本PC端的代码有一些不同，主要分为三个部分：
+  当然其中的代码和原本PC端的代码有一些不同，主要分为三个部分：
                 
         （1）加载相关的函数库
         
@@ -206,20 +207,20 @@ https://community.aidlux.com/postDetail/827
 ![1668184679011](https://user-images.githubusercontent.com/73569616/201387443-db1ef727-35ae-49f1-a62a-3da5256348e5.png)
             打开aidlux文件夹中的yolov5.py进行视频推理测试，在手机版本的Aidlux和PC端网页的Aidlux中，都可以看到推理的显示结果。PS：需要注意的是，在运行的时候，需要把手机版本里面的aidlux页面叉掉，免得会有冲突，运行的线程会直接被killed掉。
             
-        四   目标追踪算法                     ---------------------------------------------------
+   四   目标追踪算法                     ---------------------------------------------------
         
-        目标追踪常见于智慧城市AI项⽬中。
-            1 ⽬标追踪算法的场景应⽤
+   目标追踪常见于智慧城市AI项⽬中。
+ 1 ⽬标追踪算法的场景应⽤
 ![image](https://user-images.githubusercontent.com/73569616/201457839-d438d493-0be1-4413-96b8-a0dfdbd95a4f.png)
 ![image](https://user-images.githubusercontent.com/73569616/201457878-b5102d7a-e06d-4db4-b4e5-69878b37e883.png)
 ![image](https://user-images.githubusercontent.com/73569616/201457883-9aa7abf1-57b3-4495-a388-f7b99bb23cd2.png)
 
-                ⽬标追踪主要分成两个类别：⼀种是多⽬标追踪，⼀种是单⽬标追踪。多⽬标追踪主要是针对视频中所有的⽬标都进⾏检测+追踪分析，⽽单⽬标追踪，则是在视频分析的过程中，选定某⼀个物体，针对他的整个运动轨迹进⾏分析，两者应⽤的产品功能，也各不相同。⽐如多⽬标追踪，对于全图的多个⽬标在做算法功能分析，
+ ⽬标追踪主要分成两个类别：⼀种是多⽬标追踪，⼀种是单⽬标追踪。多⽬标追踪主要是针对视频中所有的⽬标都进⾏检测+追踪分析，⽽单⽬标追踪，则是在视频分析的过程中，选定某⼀个物体，针对他的整个运动轨迹进⾏分析，两者应⽤的产品功能，也各不相同。⽐如多⽬标追踪，对于全图的多个⽬标在做算法功能分析，
 例如⼈流统计、⻋流统计、⼈员逗留识别，单⽬标追踪，⽐如直播摄像头追踪等。
 
-                在业内多⽬标跟踪算法，应⽤的⽐较⼴的发展路径是：sort->deepsort->bytetrack
+ 在业内多⽬标跟踪算法，应⽤的⽐较⼴的发展路径是：sort->deepsort->bytetrack
 
-                2 常⻅的⽬标追踪算法
+   2 常⻅的⽬标追踪算法
                         sort： 在视频监控中，每个⼈体都是在往不同的⽅向移动的，因此会产⽣两个⽅⾯的信息。⽐如在10帧连续的
 图像中，有很多个⼈体，其中有两个⼩朋友，⼀个路⼈甲和路⼈⼄
 
@@ -234,15 +235,14 @@ https://community.aidlux.com/postDetail/827
 Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体的信息，就可以通过两个⽅⾯来综合
 匹配：  ⼀个是距离，另⼀个是⼈体的reid外观特征信息，两者进⾏加权来匹配，更准⼀些
 
-                        Bytetrack： 但在实际应⽤中会发现，在遮挡交错⽐较多的时候，还是会出现track_id交错⽐较多的情况。
-不过研究者也发现，在遮挡的时候，⼈体的检测框信息预测分数会相对较低。
-例如下⽅图中，第⼀张图中的0.8，由于遮挡变成了0.4->0.1。
+Bytetrack： 但在实际应⽤中会发现，在遮挡交错⽐较多的时候，还是会出现track_id交错⽐较多的情况。
+不过研究者也发现，在遮挡的时候，⼈体的检测框信息预测分数会相对较低。 例如下⽅图中，第⼀张图中的0.8，由于遮挡变成了0.4->0.1。
 
 ![image](https://user-images.githubusercontent.com/73569616/201458833-45136429-00f8-44f3-98ff-e39bb3b21522.png)
 
 ![image](https://user-images.githubusercontent.com/73569616/201458839-65a0437c-eb19-4f98-9b67-71196e770fd8.png)
 
-                 3 业内常⽤的多⽬标追踪算法 
+3 业内常⽤的多⽬标追踪算法 
                  
                             （1）带你⼊⻔多⽬标跟踪（⼀）领域概述
                             
@@ -276,9 +276,9 @@ Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体�
                             因此在摄像头⻆度⻆度选择的时候，尽量选择从上往下的视⻆，可以减少遮挡的情况，提升多⽬标追踪
                             的准确性。
 
-            4 Aidlux端检测追踪代码测试
+ **4 Aidlux端检测追踪代码测试**
             
-                ⾸先通过Aidlux⽹⻚端，将lesson4_codes代码⽂件夹上传到home⽂件夹下⾯。我们使⽤SSH的⽅式，将PC端的Vscode连接到Aidlux端代码的⽅式，我们再进⾏连
+⾸先通过Aidlux⽹⻚端，将lesson4_codes代码⽂件夹上传到home⽂件夹下⾯。我们使⽤SSH的⽅式，将PC端的Vscode连接到Aidlux端代码的⽅式，我们再进⾏连
                 接⼀下。找到yolov5_bytetrack.py的时候要有几部操作： 先sudo apt-get update。
                 再输⼊sudo apt-get install -y cmake build-essential python3-dev
                 在pip install lap -i https://pypi.tuna.tsinghua.edu.cn/simple 这是lap的添加方式。
@@ -291,7 +291,7 @@ Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体�
 
 ![image](https://user-images.githubusercontent.com/73569616/201460729-620cfb23-249a-4fae-8cab-a2b54fd162e7.png)
                             
-                每个⼈体框上⽅⽩⾊的字体，是⼈体检测框的分数。
+每个⼈体框上⽅⽩⾊的字体，是⼈体检测框的分数。
                 蓝⾊的字体，是每个⼈体track_id的值。当然，前⾯说到⽬标追踪整体的算法相对⽐较复杂，针对不同的
                 场景，其实需要修改不同的参数。
                 
@@ -299,12 +299,12 @@ Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体�
                 
 ![image](https://user-images.githubusercontent.com/73569616/201460826-caa5d1f4-307c-461b-923b-04de40f2430e.png)
                    
-                深⼊了解⽬标追踪，并且针对不同场景进⾏调节的话，可以查看修改track⽂件夹中
+深⼊了解⽬标追踪，并且针对不同场景进⾏调节的话，可以查看修改track⽂件夹中
                 byte_tracker.py的BYTETracker函数
                 
                 ![image](https://user-images.githubusercontent.com/73569616/201460839-b46488e6-d1aa-44c0-bfaf-3af551620474.png)
                 
-            五 越界识别                 -----------------------------------------------------
+五 越界识别                 -----------------------------------------------------
                     1 越界监测区域绘制
                         越界识别为例，我们主要是设置⼀个感兴趣区域，设置⼀个感兴趣区域。在一些时间段，在感兴趣ROI区域内识别到⼈体的时候，就要重点关注，是否有不合规⻛险或者异常情况。
                         再⽐如在园区的各个边界设置监测区域，俗称电⼦栅栏，当有⼈翻阅，出现在电⼦栅栏中，说明可能有⼈翻阅到园区内，需要第⼀时间告警提示。因此可以看出，在实现越界翻阅业务功能时，我们要先绘制
@@ -325,7 +325,8 @@ Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体�
 ![image](https://user-images.githubusercontent.com/73569616/201462032-692f8264-eb12-4a2c-8a69-1e1bebb993e4.png)
                         
                     2.2 ⼈体状态追踪判断
-                        在实际业务场景中，通常我们判断⼈体越界的点，主要⽤的是⼈体脚部的点。⽽由于不同的⽬标检测算法，最后的后处理不同，得到的检测框的信息可能是多样化的。⽐如在本次训练营中⽤的yolov5算法，会得到检测框的四个点信息，[左上⻆点x，左上⻆点y，宽w，⾼h]。
+                        在实际业务场景中，通常我们判断⼈体越界的点，主要⽤的是⼈体脚部的点。⽽由于不同的⽬标检测算法，最后的后处理不同，得到的检测框的信息可能是多样化的。
+                        ⽐如在本次训练营中⽤的yolov5算法，会得到检测框的四个点信息，[左上⻆点x，左上⻆点y，宽w，⾼h]。
                         所以我们需要通过代码，转换成⼈体下⽅的点，即[左上⻆点x+1/2*宽w，左上⻆点y+⾼h]。转换的⽅式也⾮常简单，即下⽅的这⼀⾏代码。
 ![image](https://user-images.githubusercontent.com/73569616/201462061-a5d198fb-a20d-4124-afc6-85795ceff18a.png)
                         
@@ -343,7 +344,7 @@ Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体�
 
 ![image](https://user-images.githubusercontent.com/73569616/201462123-23eabc21-b6fb-426a-877a-33da76033e2c.png)
 
-                    3 越界识别&系统告警
+3 越界识别&系统告警
                         注册并创建喵提醒账号:关注“喵提醒”的公众账号，点击回复消息中最后的“注册账号”，填写⼿机号码进⾏注册，注册后跳到后
 台⻚⾯可以看到，今天还能收到提醒100条信息，基础上够⽤的。注册完成后，回到公众号⻚⾯，点击菜单栏的“提醒”，并选择“新建”。填写新建提醒的相关信息，点击最后的“保存”，⻚⾯会⾃动加载，中间的部分会跳出⾃⼰账号专属对应的“喵码”和“⽹址”，后⾯的代码中主要⽤到喵码的功能。为了测试喵提醒的效果，写⼀个测试代码，放在aidlux/miaotixing.py⽂件夹中
                      越界识别+喵提醒: 改成自己的 id

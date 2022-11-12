@@ -1,7 +1,7 @@
 # Pedestrian-detection
 本项目 主要是做 越界识别算（中等型算法应用）
-街道-人体扫描
-
+     一  街道-人体扫描             -------------------------------------------------------------------
+ 
 AidLUx简介 : AIdlux主打的是基于ARM架构的跨生态（Android/鸿蒙+Linux）一站式AIOT应用开发平台。
 
 --  该项目是搭建在Aidlux（模型移植采用Python）平台上的 用到yolo5 对视频中的人踩过一条线 进行计数。
@@ -55,7 +55,7 @@ https://community.aidlux.com/postDetail/827
 
 6 Aidlux&VScode编程调试方式
 
-    下载vscode和aidlux
+  二  下载vscode和aidlux             -----------------------------------------------------
 
 7 安装本地版的Python和Opencv
 
@@ -88,7 +88,7 @@ https://community.aidlux.com/postDetail/827
 比如打开read_image_Aidlux.py文件，运行后，在手机端的Aidlux上可以看到读取的显示图片。
 打开video_capture_Aidlux.py，在读取视频和显示图像的地方，采用cvs的方式，读取运行后，就可以在手机上看到显示的视频效果。
 
-人体检测模型的训练和部署测试：
+  三 人体检测模型的训练和部署测试：              -------------------------------------------------------------------------------------
 
     1 Crowdhuman数据集下载及说明
     
@@ -187,4 +187,136 @@ https://community.aidlux.com/postDetail/827
             ![1668184679011](https://user-images.githubusercontent.com/73569616/201387443-db1ef727-35ae-49f1-a62a-3da5256348e5.png)
             打开aidlux文件夹中的yolov5.py进行视频推理测试，在手机版本的Aidlux和PC端网页的Aidlux中，都可以看到推理的显示结果。PS：需要注意的是，在运行的时候，需要把手机版本里面的aidlux页面叉掉，免得会有冲突，运行的线程会直接被killed掉。
             
+        四   目标追踪算法                     ---------------------------------------------------
+        
+        目标追踪常见于智慧城市AI项⽬中。
+            1 ⽬标追踪算法的场景应⽤
+                ![image](https://user-images.githubusercontent.com/73569616/201457839-d438d493-0be1-4413-96b8-a0dfdbd95a4f.png)
+![image](https://user-images.githubusercontent.com/73569616/201457878-b5102d7a-e06d-4db4-b4e5-69878b37e883.png)
+![image](https://user-images.githubusercontent.com/73569616/201457883-9aa7abf1-57b3-4495-a388-f7b99bb23cd2.png)
+![image](https://user-images.githubusercontent.com/73569616/201457893-e6b891d3-95df-41e2-86e8-8cf3ab54a7ee.png)
+                ⽬标追踪主要分成两个类别：⼀种是多⽬标追踪，⼀种是单⽬标追踪。多⽬标追踪主要是针对视频中所有的⽬标都进⾏检测+追踪分析，⽽单⽬标追踪，则是在视频分析的过程中，选定某⼀个物体，针对他的整个运动轨迹进⾏分析，两者应⽤的产品功能，也各不相同。⽐如多⽬标追踪，对于全图的多个⽬标在做算法功能分析，
+例如⼈流统计、⻋流统计、⼈员逗留识别，单⽬标追踪，⽐如直播摄像头追踪等。在业内多⽬标跟踪算法，应⽤的⽐较⼴的发展路径是：sort->deepsort->bytetrack
+                2 常⻅的⽬标追踪算法
+                        sort： 在视频监控中，每个⼈体都是在往不同的⽅向移动的，因此会产⽣两个⽅⾯的信息。⽐如在10帧连续的
+图像中，有很多个⼈体，其中有两个⼩朋友，⼀个路⼈甲和路⼈⼄![image](https://user-images.githubusercontent.com/73569616/201458515-67ad6ef9-0093-4bab-9387-117f29c2319b.png)
+在10帧的图像中，⽐如前三帧的图像，多⽬标追踪算法会初始化两个track_id。⽐如路⼈甲是
+track_id=1，路⼈⼄是track_id=2。那么在第四帧以后，我们想从图⽚上的多个⼈体中，还把路⼈甲和路
+⼈⼄两个⼈找出来。但这时，我们只有之前的3帧两⼈的轨迹信息，怎么办呢？
+这时会采⽤卡尔曼预测的⽅法，判断两⼈的运动轨迹，在第四帧图像中可能在哪个位置，预测出可能是
+两⼈的预测框。⽽在第四帧图像中，通过⽬标检测已经得出很多的⼈体检测框，这时再采⽤匈⽛利算
+法，从多个⼈体的检测框中，匹配找到路⼈甲和路⼈⼄的框，并赋予两个track_id的值。
+这就是Sort算法的⼤致思路，但是其中也会存在⼀个问题，即两个⼈遮挡交错的时候，卡尔曼预测就会
+有问题。
+因为后续的匹配，都是通过位置信息来构建的，交错的时候，不同⼈体的位置信息就会有错乱了。
+                        Deepsort：因此在Sort的基础上，为了区分出不同的⾏⼈，增加⼈体的外观信息Appearance Information，变成了
+Deepsort。⽐如在前⾯第四帧的图像上，想找到之前track_id⼈体的信息，就可以通过两个⽅⾯来综合
+匹配：
+⼀个是距离，另⼀个是⼈体的reid外观特征信息，两者进⾏加权来匹配，更准⼀些
+                        Bytetrack： 但在实际应⽤中会发现，在遮挡交错⽐较多的时候，还是会出现track_id交错⽐较多的情况。
+不过研究者也发现，在遮挡的时候，⼈体的检测框信息预测分数会相对较低。
+例如下⽅图中，第⼀张图中的0.8，由于遮挡变成了0.4->0.1。
+![image](https://user-images.githubusercontent.com/73569616/201458833-45136429-00f8-44f3-98ff-e39bb3b21522.png)
+![image](https://user-images.githubusercontent.com/73569616/201458839-65a0437c-eb19-4f98-9b67-71196e770fd8.png)
 
+                 3 业内常⽤的多⽬标追踪算法 
+                 
+                            （1）带你⼊⻔多⽬标跟踪（⼀）领域概述
+                            
+                            https://zhuanlan.zhihu.com/p/62827974
+                            
+                            （2）带你⼊⻔多⽬标跟踪（⼆）SORT & DeepSORT
+                            
+                            https://zhuanlan.zhihu.com/p/62858357
+                            
+                            （3）带你⼊⻔多⽬标跟踪（三）匈⽛利算法&KM算法
+                            
+                            https://zhuanlan.zhihu.com/p/62981901
+                            
+                            （4）带你⼊⻔多⽬标跟踪（四）外观模型 Appearance Model
+                            
+                            https://zhuanlan.zhihu.com/p/63189011
+                            
+                            （5）ByteTrack: Multi-Object Tracking by Associating Every Detection Box阅读笔记
+                            
+                            https://zhuanlan.zhihu.com/p/421264325
+                            
+                            当然，客观来说，多⽬标追踪在遮挡情况下，还存在很多的交错丢失的问题，这也是业内⽬前的⼀个研
+                            究瓶颈。
+                            此外针对Deeposrt和Bytetrack的项⽬使⽤选择，⼤⽩也有⼀些⼼得参照：
+                            （1）不同的⽬标：上⾯说的是对于⼈体的检测，其实在现场项⽬中，会⽤到各种⽬标的追踪，⽐如⻋辆
+                            追踪、⻜机追踪等。当有⽬标的reid模型的时候，可以选择deepsort，当没有的时候，可以选择
+                            bytetrack，因为当⽬标的reid特征权重不好的时候，对于多⽬标加权匹配则是个⼲扰项。
+                            （2）遮挡的⽬标：⼈员交错，遮挡严重的时候，多⽬标追踪的准确性是个业内的难题。
+                            因此在摄像头⻆度⻆度选择的时候，尽量选择从上往下的视⻆，可以减少遮挡的情况，提升多⽬标追踪
+                            的准确性。
+
+            4 Aidlux端检测追踪代码测试
+            
+                ⾸先通过Aidlux⽹⻚端，将lesson4_codes代码⽂件夹上传到home⽂件夹下⾯。我们使⽤SSH的⽅式，将PC端的Vscode连接到Aidlux端代码的⽅式，我们再进⾏连
+接⼀下。找到yolov5_bytetrack.py的时候要有几部操作： 先sudo apt-get update。
+                            再输⼊sudo apt-get install -y cmake build-essential python3-dev
+                            在pip install lap -i https://pypi.tuna.tsinghua.edu.cn/simple 这是lap的添加方式。
+                            cython_bbox也要：  cython：pip install cython -i https://pypi.tuna.tsinghua.edu.cn/simple
+                            然后再安装cython_bbox：pip install cython_bbox -i https://pypi.tuna.tsinghua.edu.cn/simple
+                            里⾯也⽤到⼀些torch相关的函数，所以我们也输⼊：pip install torch -i https://pypi.tuna.tsinghua.edu.cn/simple，如果有安装过则跳过。
+                            还要安装torchvision，所以我们输⼊：pip install torchvision -i  https://pypi.tuna.tsinghua.edu.cn/simple，如果有安装过，则跳过
+                            thop安装：pip install thop -i https://pypi.tuna.tsinghua.edu.cn/simple
+                            运行终端 python + 项目位置（我的： python /home/lesson4_codes/aidlux/yolov5_bytetrack.py）
+                            ![image](https://user-images.githubusercontent.com/73569616/201460729-620cfb23-249a-4fae-8cab-a2b54fd162e7.png)
+                每个⼈体框上⽅⽩⾊的字体，是⼈体检测框的分数。
+                蓝⾊的字体，是每个⼈体track_id的值。当然，前⾯说到⽬标追踪整体的算法相对⽐较复杂，针对不同的
+                场景，其实需要修改不同的参数。![image](https://user-images.githubusercontent.com/73569616/201460813-9149133b-7ee7-40fe-b811-0feca910cb48.png)
+                   ![image](https://user-images.githubusercontent.com/73569616/201460826-caa5d1f4-307c-461b-923b-04de40f2430e.png)
+                深⼊了解⽬标追踪，并且针对不同场景进⾏调节的话，可以查看修改track⽂件夹中
+                byte_tracker.py的BYTETracker函数![image](https://user-images.githubusercontent.com/73569616/201460839-b46488e6-d1aa-44c0-bfaf-3af551620474.png)
+            五 越界识别                 -----------------------------------------------------
+                    1 越界监测区域绘制
+                        越界识别为例，我们主要是设置⼀个感兴趣区域，设置⼀个感兴趣区域。在一些时间段，在感兴趣ROI区域内识别到⼈体的时候，就要重点关注，是否有不合规⻛险或者异常情况。再⽐如在园区的各个边界设置监测区域，俗称电⼦栅栏，当有⼈翻阅，出现在电⼦栅栏中，说明可能有⼈翻阅到园区内，需要第⼀时间告警提示。因此可以看出，在实现越界翻阅业务功能时，我们要先绘制
+⼀个监测区域，即电⼦栅栏。在训练营代码中，围栏是⼿动绘制的，主要是基于point这4个点，绘制了⼀个多边形区域，⽐如下⽅的代码，也在aidlux⽂件夹的yolov5_overstep.py中。
+自己找个图片软件去找到位置下标(ps等)，然后写到上面数组中。![image](https://user-images.githubusercontent.com/73569616/201461940-a46007bc-253d-467e-af20-0c28ad9f482f.png)
+运⾏后就可以看到，我们已经在监控视频中，添加上监测的越界区域了。
+![image](https://user-images.githubusercontent.com/73569616/201461946-b523a182-8148-4c29-a5d1-4a89edbe5b44.png)
+
+                    2 越界识别功能实现
+                    2.1 ⼈体检测监测点调整
+                        了解了监测区域的绘制后，我们再来整体实现⼀下越界识别的功能。在yolov5_overstep.py。并将绘制区域的功能，写到之前检测追踪代码的后⾯。![image](https://user-images.githubusercontent.com/73569616/201462032-692f8264-eb12-4a2c-8a69-1e1bebb993e4.png)
+                    2.2 ⼈体状态追踪判断
+                        在实际业务场景中，通常我们判断⼈体越界的点，主要⽤的是⼈体脚部的点。⽽由于不同的⽬标检测算法，最后的后处理不同，得到的检测框的信息可能是多样化的。⽐如在本次训练营中⽤的yolov5算法，会得到检测框的四个点信息，[左上⻆点x，左上⻆点y，宽w，⾼h]。所以我们需要通过代码，转换成⼈体下⽅的点，即[左上⻆点x+1/2*宽w，左上⻆点y+⾼h]。转换的⽅式也⾮常简单，即下⽅的这⼀⾏代码。![image](https://user-images.githubusercontent.com/73569616/201462061-a5d198fb-a20d-4124-afc6-85795ceff18a.png)
+                    2.3 越界⾏为判断
+                        有了监测的⼈体的坐标信息，我们还需要根据⼈体是否在监测区域内，将⼈体的状态进⾏区分。这⾥为
+了便于演示测试，我们将⼈体在监测区域内设置为1，不在监测区域内设置为-1。![image](https://user-images.githubusercontent.com/73569616/201462071-9ec08a9d-3ddf-4eaf-9e26-c57cd59faa98.png)因此第三部分的代码，主要是判断每个⼈的运动状态，将每个⼈运动轨迹中，每⼀帧在图⽚上的状态统计下来。这⾥主要时第三部分的代码，判断每个⼈体每⼀帧的状态，是1还是-1，并将所有的状态，保存到track_id_status⾥⾯ ![image](https://user-images.githubusercontent.com/73569616/201462093-0f837cdb-3640-4a97-b1d3-cf979fb1acc3.png) 当在第三部分，知道每个⼈在移动轨迹中的状态时，就可以知道是否越界了。⽐如某个⼈当前⼀帧的状态是-1，后⼀帧的状态变成1时，说明刚刚进⼊越界区域，这时就将当前的图⽚进⾏保存，留作告警记录。
+![image](https://user-images.githubusercontent.com/73569616/201462123-23eabc21-b6fb-426a-877a-33da76033e2c.png)
+
+                    3 越界识别&系统告警
+                        注册并创建喵提醒账号:关注“喵提醒”的公众账号，点击回复消息中最后的“注册账号”，填写⼿机号码进⾏注册，注册后跳到后
+台⻚⾯可以看到，今天还能收到提醒100条信息，基础上够⽤的。注册完成后，回到公众号⻚⾯，点击菜单栏的“提醒”，并选择“新建”。填写新建提醒的相关信息，点击最后的“保存”，⻚⾯会⾃动加载，中间的部分会跳出⾃⼰账号专属对应的“喵码”和“⽹址”，后⾯的代码中主要⽤到喵码的功能。为了测试喵提醒的效果，写⼀个测试代码，放在aidlux/miaotixing.py⽂件夹中
+                     越界识别+喵提醒: 改成自己的 id![image](https://user-images.githubusercontent.com/73569616/201462447-2d8b339b-bb8d-4a73-8acd-d4c83cc2d977.png) 
+                     还有一篇文章分享：  https://mp.weixin.qq.com/s/oyhoPkzJuXnnzU9V2moZaw
+                    4 业务逻辑实现：
+                        运⾏前⾯aidlux⽂件夹中yolov5_overstep.py测试⼀下，记得将喵码修改成你⾃⼰的。
+                    4.1 ⼈流统计代码实现
+                        使⽤⼈体检测+⼈体追踪+线段统计的⽅式，针对视频实现⼈流统计，并通过喵提醒告知⼈流统计的数量。![image](https://user-images.githubusercontent.com/73569616/201463100-baab4b64-614a-4a26-bd45-e63a46d44485.png)
+                        绘制了统计的线段，针对此线段进⾏客流统计效果。从⽽达到下⽅视频的效果，最终统计了有14个⼈
+                        （1）画线： 前⾯是绘制越界区域，这⾥则是绘制统计⼈流的线段，当然绘制也很简单，主要采⽤cv2.line的⽅式。![image](https://user-images.githubusercontent.com/73569616/201463134-c25f63a3-404c-44e2-9a12-948ebe1e6642.png)
+                        （2）⼈体检测统计点调整：前⾯讲了分析⼈体检测框下⽅中⼼点，和越界区域的位置关系。这⾥也是⼀样的，主要分析⼈体下⽅中⼼点，和⼈流统计线段的位置关系，因此也在修改⼀下统计区域![image](https://user-images.githubusercontent.com/73569616/201463159-38071b98-aaef-4b66-93f1-3ce036ccdcb9.png)
+                        （3）⼈体和线段的位置状态判断： 这⾥主要分析⼈体下⽅点，和统计线段的位置关系，这部分的代码在utils.py的is_passing_line函数中。
+当⼈体在线段的下⽅时，⼈体状态是-1。当⼈体在线段的上⽅时，⼈体状态是1。![image](https://user-images.githubusercontent.com/73569616/201463174-26eab77e-6a3b-4c9d-bdda-10cb559e41dd.png)  实现效果![image](https://user-images.githubusercontent.com/73569616/201463185-62ce65f7-d70b-4aec-ab69-7fc97a1d0ee2.png)
+![image](https://user-images.githubusercontent.com/73569616/201463215-83c1905e-392d-463f-b103-d022d29cc86d.png)
+判断+喵提醒代码：
+![image](https://user-images.githubusercontent.com/73569616/201463234-179840b8-27cc-4b54-9be7-6e60c007da09.png)
+运行代码 微信显示：![image](https://user-images.githubusercontent.com/73569616/201463274-c56b3664-5772-4e15-ba27-6c4357bd34c6.png)
+
+
+
+
+
+
+                        
+                    4.2 训练营作业发布
+
+
+
+
+        
+ 
